@@ -20,7 +20,7 @@ Add following content to it:
 
 ```js
 module.exports = {
-  addons: ['@storybook/addon-cssresources'],
+  addons: ["@storybook/addon-cssresources"],
 };
 ```
 
@@ -29,10 +29,10 @@ module.exports = {
 You need add the all the css resources at compile time using the `withCssResources` decorator. They can be added globally or per story. You can then choose which ones to load from the cssresources addon UI:
 
 ```js
-import { withCssResources } from '@storybook/addon-cssresources';
+import { withCssResources } from "@storybook/addon-cssresources";
 
 export default {
-  title: 'CssResources',
+  title: "CssResources",
   parameters: {
     cssresources: [
       {
@@ -48,3 +48,30 @@ export default {
 
 export const defaultView = () => <div />;
 ```
+
+## Credits
+
+While this addon was part of the [Storybook monorepo](https://github.com/storybookjs/storybook), it received commits from the following authors:
+
+> Aaron Reisman,
+> Andrew Lisowski,
+> Armand Abric,
+> Brody McKee,
+> Clément DUNGLER,
+> Gaëtan Maisse,
+> Grey Baker,
+> Jean-Philippe Roy,
+> Jimmy Somsanith,
+> Jon Palmer,
+> Lynn Chyi,
+> Michael Shilman,
+> Michaël De Boey,
+> Neville Mehta,
+> Norbert de Langen,
+> Paul Rosania,
+> Preston Goforth,
+> Renovate Bot,
+> Simen Bekkhus,
+> Tom Coleman,
+> Tomi Laurell,
+> Varun Vachhar
