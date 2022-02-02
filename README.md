@@ -2,7 +2,7 @@
 
 Storybook Addon Cssresources to switch between css resources at runtime for your story [Storybook](https://storybook.js.org).
 
-[Framework Support](https://github.com/storybookjs/storybook/blob/master/ADDONS_SUPPORT.md)
+[Framework Support](https://storybook.js.org/docs/react/api/frameworks-feature-support)
 
 ![Storybook Addon Cssresources Demo](docs/demo.gif)
 
