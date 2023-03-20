@@ -1,6 +1,8 @@
-import { document } from 'global';
+import { global } from 'global';
 import { addons, makeDecorator } from '@storybook/addons';
 import { EVENTS, PARAM_KEY } from './constants';
+
+const { document } = global;
 
 const changeMediaAttribute = (element: HTMLElement, enabled: boolean) => {
   const current = element.getAttribute('media');
@@ -67,7 +69,7 @@ export const withCssResources = makeDecorator({
   skipIfNoParametersOrOptions: true,
 
   wrapper: (getStory, context, { options, parameters }) => {
-    const storyOptions = parameters || options;
+    const storyOptions: any = parameters || options;
     addons.getChannel().on(EVENTS.SET, setResources);
 
     if (!Array.isArray(storyOptions) && !Array.isArray(storyOptions.cssresources)) {
