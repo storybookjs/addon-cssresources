@@ -1,79 +1,123 @@
 {
-  "name": "storybook-addon-kit",
+  "name": "@storybook/addon-cssresources",
   "version": "0.0.0",
   "description": "everything you need to build a Storybook addon",
   "keywords": [
-    "storybook-addons",
+    "storybook-addon",
+    "storybook",
     "style",
-    "test"
+    "data-state"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/storybookjs/storybook-addon-kit"
+    "url": "https://github.com/storybookjs/addon-cssresources"
   },
   "author": "winkerVSbecks",
   "license": "MIT",
-  "main": "dist/preset",
+  "type": "module",
+  "imports": {
+    "#*": [
+      "./*",
+      "./*.ts",
+      "./*.tsx"
+    ]
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./preview": {
+      "types": "./dist/preview.d.ts",
+      "default": "./dist/preview.js"
+    },
+    "./preset": "./dist/preset.js",
+    "./manager": "./dist/manager.js",
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist/**/*",
     "README.md",
-    "*.js"
+    "*.js",
+    "*.d.ts"
   ],
   "scripts": {
-    "clean": "rimraf ./dist",
-    "buildBabel": "babel ./src --out-dir ./dist --extensions \".js,.jsx,.ts,.tsx\"",
-    "buildTsc": "tsc --declaration --emitDeclarationOnly --outDir ./dist",
-    "build": "concurrently \"npm run buildBabel\" \"npm run buildTsc\"",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "storybook": "start-storybook -p 6006",
-    "start": "concurrently \"npm run storybook -- --no-manager-cache --quiet\" \"npm run build -- --watch\"",
-    "build-storybook": "build-storybook",
-    "prerelease": "node check-metadata.js",
-    "release": "npm run build && auto shipit"
+    "prebuild": "node -e \"fs.rmSync('./dist', { recursive: true, force: true })\"",
+    "build": "tsup",
+    "build-storybook": "storybook build",
+    "build:watch": "npm run build -- --watch",
+    "format": "prettier --write .",
+    "lint": "eslint --cache .",
+    "lint:fix": "pnpm lint --fix",
+    "prerelease": "zx scripts/prepublish-checks.js",
+    "release": "npm run build && auto shipit",
+    "start": "run-p build:watch \"storybook --quiet\"",
+    "storybook": "storybook dev -p 6006",
+    "test": "vitest"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/preset-react": "^7.12.5",
-    "@babel/preset-typescript": "^7.13.0",
-    "@storybook/react": "^6.1.14",
-    "auto": "^10.3.0",
-    "babel-loader": "^8.1.0",
-    "chalk": "^2.4.2",
-    "concurrently": "^5.3.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.2.4"
+    "@eslint/js": "^9.36.0",
+    "@storybook/addon-docs": "next",
+    "@storybook/icons": "^1.4.0",
+    "@storybook/react-vite": "next",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^20",
+    "@types/react": "^18.2.65",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.7.0",
+    "auto": "^11.3.0",
+    "boxen": "^8.0.1",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-storybook": "next",
+    "jsdom": "^27.0.1",
+    "npm-run-all2": "^8.0.4",
+    "prettier": "^3.6.2",
+    "prompts": "^2.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "next",
+    "ts-dedent": "^2.2.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.44.1",
+    "vite": "^7.0.5",
+    "vitest": "^4.0.4",
+    "zx": "^8.7.1"
   },
   "peerDependencies": {
-    "@storybook/addons": "^6.1.14",
-    "@storybook/api": "^6.1.14",
-    "@storybook/components": "^6.1.14",
-    "@storybook/core-events": "^6.1.14",
-    "@storybook/theming": "^6.1.14",
-    "react": "^16.8.0 || ^17.0.0",
-    "react-dom": "^16.8.0 || ^17.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
+    "storybook": "*"
   },
   "publishConfig": {
     "access": "public"
   },
+  "bundler": {
+    "managerEntries": [
+      "src/manager.tsx"
+    ],
+    "previewEntries": [
+      "src/preview.ts",
+      "src/index.ts"
+    ],
+    "nodeEntries": [
+      "src/preset.ts"
+    ]
+  },
   "storybook": {
-    "displayName": "Addon Kit",
+    "displayName": "CSS Resources",
     "supportedFrameworks": [
-      "react",
-      "vue",
-      "angular"
+      "supported-frameworks"
     ],
     "icon": "https://user-images.githubusercontent.com/321738/63501763-88dbf600-c4cc-11e9-96cd-94adadc2fd72.png"
+  },
+  "packageManager": "pnpm@10.0.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
