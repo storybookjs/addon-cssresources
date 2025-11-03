@@ -1,6 +1,6 @@
 {
   "name": "@storybook/addon-cssresources",
-  "version": "0.0.0",
+  "version": "6.2.9",
   "description": "everything you need to build a Storybook addon",
   "keywords": [
     "storybook-addon",
