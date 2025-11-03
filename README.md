@@ -4,7 +4,7 @@ Switch between CSS resources at runtime, and define per-story CSS resources.
 
 [Framework Support](https://storybook.js.org/docs/react/api/frameworks-feature-support)
 
-![Storybook Addon Cssresources Demo](docs/demo.gif)
+![Storybook Addon Cssresources Demo](https://raw.githubusercontent.com/storybookjs/addon-cssresources/refs/heads/main/docs/demo.gif)
 
 ## Installation
 
@@ -31,10 +31,7 @@ Then add the addon to your Storybook config:
 import { defineMain } from '@storybook/<your-framework>/node';
 
 const config = defineMain({
-  addons: [
-    '@storybook/addon-docs',
-    '@storybook/addon-cssresources', // Add here
-  ],
+  addons: ['@storybook/addon-cssresources'],
   framework: '@storybook/react-vite',
 });
 
@@ -75,7 +72,7 @@ export default definePreview({
         picked: false,
         hideCode: false,
       },
-    ]
+    ],
   },
 });
 ```
