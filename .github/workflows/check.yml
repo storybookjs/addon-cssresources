@@ -14,9 +14,6 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
-    strategy:
-      matrix:
-        node-version: [20.19, 22.12]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,14 +23,8 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
+      - name: Setup Node.js and Install Dependencies
+        uses: ./.github/actions/setup-node-and-install
 
       - name: Check for linter errors
         run: pnpm lint
