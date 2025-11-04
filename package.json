@@ -44,7 +44,7 @@
     "prebuild": "node -e \"fs.rmSync('./dist', { recursive: true, force: true })\"",
     "build": "tsup",
     "build-storybook": "storybook build",
-    "build:watch": "pnpm run build -- --watch",
+    "build:watch": "pnpm run build --watch",
     "format": "prettier --write .",
     "lint": "eslint --cache .",
     "lint:fix": "pnpm lint --fix",
