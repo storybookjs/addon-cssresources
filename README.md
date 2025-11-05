@@ -1,52 +1,80 @@
 # Storybook Addon Cssresources
 
-Storybook Addon Cssresources to switch between css resources at runtime for your story [Storybook](https://storybook.js.org).
+Switch between CSS resources at runtime, and define per-story CSS resources.
 
 [Framework Support](https://storybook.js.org/docs/react/api/frameworks-feature-support)
 
-![Storybook Addon Cssresources Demo](docs/demo.gif)
+![Storybook Addon Cssresources Demo](https://raw.githubusercontent.com/storybookjs/addon-cssresources/refs/heads/main/docs/demo.gif)
 
 ## Installation
+
+Install the addon:
 
 ```sh
 yarn add -D @storybook/addon-cssresources
 ```
 
+```sh
+npm i -D @storybook/addon-cssresources
+```
+
+```sh
+pnpm i -D @storybook/addon-cssresources
+```
+
 ## Configuration
 
-Then create a file called `main.js` in your storybook config.
+Then add the addon to your Storybook config:
 
-Add following content to it:
+```ts
+// .storybook/main.ts
+import { defineMain } from '@storybook/<your-framework>/node';
 
-```js
-module.exports = {
-  addons: ["@storybook/addon-cssresources"],
-};
+const config = defineMain({
+  addons: ['@storybook/addon-cssresources'],
+  framework: '@storybook/react-vite',
+});
+
+export default config;
 ```
 
 ## Usage
 
-You need add the all the css resources at compile time using the `withCssResources` decorator. They can be added globally or per story. You can then choose which ones to load from the cssresources addon UI:
+Define the CSS resources you want to use in your [`parameters`](https://storybook.js.org/docs/writing-stories/parameters). They can be added globally or per story.
 
-```js
-import { withCssResources } from "@storybook/addon-cssresources";
+You can choose which resources get loaded by default in the parameters, and then unload or load other resources in the addon panel UI.
 
-export default {
-  title: "CssResources",
+If you use [CSF Next](https://storybook.js.org/docs/api/csf/csf-next), load the addon in `preview.ts` as well:
+
+```ts
+// .storybook/preview.ts
+import { definePreview } from '@storybook/<your-framework>';
+import addonDocs from '@storybook/addon-docs';
+import addonCssResources from '@storybook/addon-cssresources';
+
+export default definePreview({
+  addons: [addonDocs(), addonCssResources()], // only if using CSF Next
   parameters: {
     cssresources: [
       {
-        id: `bluetheme`,
-        code: `<style>body { background-color: lightblue; }</style>`,
+        // Label shown in the addon panel UI
+        id: `bootstrap v5.0.2`,
+        // Code to use to load the resource
+        code: `<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" crossorigin="anonymous"></link>`,
+        // Defines which resources will be initially loaded in the story
+        picked: true,
+        // Defaults to false, this enables you to hide the code snippet and only displays the style selector
+        hideCode: false,
+      },
+      {
+        id: `bootstrap v4.1.3`,
+        code: `<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" crossorigin="anonymous"></link>`,
         picked: false,
-        hideCode: false, // Defaults to false, this enables you to hide the code snippet and only displays the style selector
+        hideCode: false,
       },
     ],
   },
-  decorators: [withCssResources],
-};
-
-export const defaultView = () => <div />;
+});
 ```
 
 ## Credits
