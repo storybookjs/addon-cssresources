@@ -1,6 +1,6 @@
-import { useChannel, useParameter } from 'storybook/preview-api';
+import { useChannel } from 'storybook/preview-api';
 import { EVENTS, PARAM_KEY } from './constants';
-import { definePreviewAddon, type DecoratorFunction } from 'storybook/internal/csf';
+import { definePreviewAddon, type DecoratorFunction, type LoaderFunction } from 'storybook/internal/csf';
 import type { CssResource } from './types';
 import { useEffect, useState } from 'react';
 
@@ -64,16 +64,12 @@ const setResources = (resources: CssResource[]) => {
   });
 };
 
-const DocsDecorator: DecoratorFunction = (StoryFn) => {
-  const listParameter = useParameter<CssResource[]>(PARAM_KEY, []);
-  setResources(listParameter || []);
-  return StoryFn();
-};
-
 const PreviewDecorator: DecoratorFunction = (StoryFn) => {
   const [currentList, setCurrentList] = useState<CssResource[]>([]);
+  const [hasChangedInUi, setHasChangedInUi] = useState<boolean>(false);
   const [pickedResources, setPickedResources] = useState<CssResource[] | null>(null);
 
+  // Update the list of resources to show when the user picks/unpicks them in the manager UI.
   useChannel({
     [EVENTS.SET]: (pr) => {
       setPickedResources(pr);
@@ -83,20 +79,32 @@ const PreviewDecorator: DecoratorFunction = (StoryFn) => {
   useEffect(() => {
     const filtered = (pickedResources || []).filter(({ picked }: CssResource) => picked);
     setCurrentList(filtered);
+    // Setting this here means we only trigger a change of picked resources once we've
+    // received the manager event AND computed the filtered list.
+    setHasChangedInUi(pickedResources !== null);
   }, [pickedResources]);
 
-  setResources(currentList);
+  // Only set resources once there's been a UI change; initial state was handled by the loader.
+  if (hasChangedInUi) {
+    setResources(currentList);
+  }
   return StoryFn();
 };
 
 export const withCssResources: DecoratorFunction = (StoryFn, context) => {
   if (context.viewMode !== 'story') {
-    return DocsDecorator(StoryFn, context);
+    return StoryFn();
   }
 
   return PreviewDecorator(StoryFn, context);
 };
 
+export const cssResourcesLoader: LoaderFunction = async ({ parameters }) => {
+  const filtered = (parameters[PARAM_KEY] || []).filter(({ picked }: CssResource) => picked);
+  setResources(filtered);
+};
+
 export default definePreviewAddon({
   decorators: [withCssResources],
+  loaders: [cssResourcesLoader],
 });
